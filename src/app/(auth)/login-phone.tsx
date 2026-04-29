@@ -1,10 +1,7 @@
 import Text from "@/components/ui/text";
 import { AntDesign } from "@expo/vector-icons";
 // import { LinearGradient } from "expo-linear-gradient";
-import {
-  EmailAndUsernameInput,
-  PasswordInput,
-} from "@/components/ui/text-input";
+import { NumberPhoneInput } from "@/components/ui/text-input";
 import { useAuth } from "@/context/auth";
 import { useRouter } from "expo-router";
 import React from "react";
@@ -23,18 +20,14 @@ import {
 
 const { width, height } = Dimensions.get("window");
 
-const LoginScreen = () => {
-  const { signInWithUsernamePassword } = useAuth();
+const LoginPhoneScreen = () => {
+  const { checkNumberPhoneUser } = useAuth();
   const router = useRouter();
 
-  const [username, setUsername] = React.useState("");
-  const [password, setPassword] = React.useState("");
-  const [secure, setSecure] = React.useState(true);
-  const [email, setEmail] = React.useState("");
-
-  const loginUser = async () => {
+  const [phone, setPhone] = React.useState("");
+  const checkNumberPhone = async () => {
     try {
-      await signInWithUsernamePassword(email, password);
+      await checkNumberPhoneUser(phone);
     } catch (error: any) {
       console.log("error:", error?.message);
     }
@@ -48,7 +41,7 @@ const LoginScreen = () => {
         {/* Logo */}
 
         <Text weight="bold" className=" text-3xl font-bold mb-2">
-          Welcome back!
+          Login ponsel
         </Text>
 
         <Text weight="semibold" className="text-center text-base">
@@ -67,24 +60,17 @@ const LoginScreen = () => {
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View className="bg-[#F2F2F2] dark:bg-[#121212] rounded-t-[40px] px-6 pt-8 pb-12 mt-1 ">
           {/* Email */}
-          <EmailAndUsernameInput
-            label="Email / Username"
-            placeholder="jonviter17@gmail.com"
-            value={email}
-            onChangeText={setEmail}
-          />
 
-          <PasswordInput
-            label="Password"
-            placeholder="••••••••"
-            value={password}
-            onChangeText={setPassword}
+          <NumberPhoneInput
+            label="Login Nomor Ponsel"
+            placeholder="81234567890"
+            value={phone}
+            onChangeText={setPhone}
           />
-
           {/* Login Button */}
           <Pressable
             className="bg-[#5E2E91] dark:bg-[#9A67EA] py-4 rounded-xl items-center mb-6"
-            onPress={loginUser}
+            onPress={checkNumberPhone}
           >
             <Text className="text-white font-semibold text-lg">Login</Text>
           </Pressable>
@@ -92,10 +78,10 @@ const LoginScreen = () => {
           {/* Register */}
           <TouchableOpacity
             className="items-center"
-            onPress={() => router.push("/(auth)/login-phone")}
+            onPress={() => router.push("/(auth)")}
           >
             <Text className="text-blue-600 font-medium">
-              Login nomor ponsel ?
+              Login Username & Password ?
             </Text>
           </TouchableOpacity>
 
@@ -124,7 +110,7 @@ const LoginScreen = () => {
   );
 };
 
-export default LoginScreen;
+export default LoginPhoneScreen;
 
 const styles = StyleSheet.create({
   container: {
