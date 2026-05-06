@@ -47,15 +47,9 @@ const DateMonthPicker = React.forwardRef<BottomSheetRefProps, IDatePicker>(
       return arr;
     }, [tempYear]);
 
-    // const onPress = React.useCallback(() => {
-    //   const isActive = ref?.current?.isActive();
-
-    //   if (isActive) {
-    //     ref?.current?.scrollTo(0);
-    //   } else {
-    //     ref?.current?.scrollTo(-300);
-    //   }
-    // }, []);
+    if (tempYear === currentYear && tempMonth > currentMonth) {
+      setTempMonth(currentMonth);
+    }
 
     const onSelectDate = async () => {
       onSelect({ year: tempYear, month: tempMonth, month_value: labelMonth });

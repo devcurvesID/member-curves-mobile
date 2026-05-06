@@ -1,74 +1,12 @@
 import ContainerPage from "@/components/ui/container-page";
+import Item from "@/components/ui/item";
 import Section from "@/components/ui/section";
 import { useAuth } from "@/context/auth";
 import { formatDate } from "@/helpers/dates";
-import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
 import React from "react";
 import { Image, Pressable, ScrollView, Text, View } from "react-native";
-
-const getIcon = (key: string) => {
-  switch (key) {
-    case "name":
-      return <Ionicons name="person" size={18} color="#6366F1" />;
-    case "email":
-      return <Ionicons name="mail" size={18} color="#3B82F6" />;
-    case "birth":
-      return (
-        <MaterialCommunityIcons name="cake-variant" size={18} color="#F59E0B" />
-      );
-    case "joined":
-      return (
-        <MaterialCommunityIcons
-          name="calendar-check"
-          size={18}
-          color="#10B981"
-        />
-      );
-    case "sex":
-      return (
-        <MaterialCommunityIcons
-          name="gender-female"
-          size={18}
-          color="#EC4899"
-        />
-      );
-    case "phone":
-      return <Ionicons name="call" size={18} color="#22C55E" />;
-    case "address":
-      return <Ionicons name="location" size={18} color="#F97316" />;
-    case "tshirt":
-      return (
-        <MaterialCommunityIcons name="tshirt-crew" size={18} color="#8B5CF6" />
-      );
-    default:
-      return (
-        <Ionicons name="information-circle-outline" size={18} color="#999" />
-      );
-  }
-};
-
-const Item = ({
-  label,
-  value,
-  iconKey,
-}: {
-  label: string;
-  value: any;
-  iconKey: string;
-}) => (
-  <View className="mb-3">
-    <Text className="text-gray-400 text-xs mb-1">{label}</Text>
-
-    <View className="flex-row items-center border border-purple-400 rounded-xl px-4 py-3 bg-white">
-      {getIcon(iconKey)}
-      <Text className="ml-3 text-gray-800 font-semibold flex-1">
-        {value ?? "-"}
-      </Text>
-    </View>
-  </View>
-);
 
 export default function ProfileScreen() {
   const router = useRouter();
