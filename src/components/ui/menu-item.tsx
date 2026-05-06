@@ -12,8 +12,15 @@ interface MenuItemProps extends PressableProps {
   icon: keyof typeof Ionicons.glyphMap;
   title: string;
   danger?: boolean;
+  isBottom?: boolean;
 }
-const MenuItem = ({ icon, title, danger, ...props }: MenuItemProps) => {
+const MenuItem = ({
+  icon,
+  title,
+  danger,
+  isBottom,
+  ...props
+}: MenuItemProps) => {
   return (
     <Pressable
       {...props}
@@ -38,7 +45,7 @@ const MenuItem = ({ icon, title, danger, ...props }: MenuItemProps) => {
 
       {!danger && (
         <Ionicons
-          name="chevron-forward"
+          name={isBottom ? "chevron-down" : "chevron-forward"}
           size={18}
           color="rgba(255,255,255,0.4)"
         />

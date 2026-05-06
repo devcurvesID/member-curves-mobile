@@ -3,6 +3,7 @@ import Text from "@/components/ui/text";
 import { useAuth } from "@/context/auth";
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
+import { router } from "expo-router";
 import { useColorScheme } from "nativewind";
 import React from "react";
 import {
@@ -104,7 +105,7 @@ const DashboardScreen = () => {
           {/* <SectionTitle>Your Weekly Progress</SectionTitle> */}
           <View className="flex-row gap-4">
             <MenuTile
-              // onPress={() => router.push("/workout-plan")}
+              onPress={() => router.push("/user/weigh-measure")}
               title="Penimbangan & Pengukuran"
               icon={<Ionicons name="calendar" size={22} color="#F8BBD0" />}
             />
@@ -119,6 +120,7 @@ const DashboardScreen = () => {
               icon={<Ionicons name="bar-chart" size={22} color="#F8BBD0" />}
             />
             <MenuTile
+              onPress={() => router.push("/user/attendance")}
               title="Absensi"
               icon={<Ionicons name="bar-chart" size={22} color="#F8BBD0" />}
             />
