@@ -15,6 +15,14 @@ const getDateTime = (date: Date): string => {
   var year = checkedDate.format("YYYY");
   return day + " " + month + ", " + year;
 };
+
+const formatCurrency = (value: number) => {
+  return new Intl.NumberFormat("id-ID", {
+    style: "currency",
+    currency: "IDR",
+    maximumFractionDigits: 0,
+  }).format(value);
+};
 const getTodayDateTime = (): string => {
   const date = new Date();
   let day = date.getDate();
@@ -23,4 +31,4 @@ const getTodayDateTime = (): string => {
   return `${day}-${month}-${year}`;
 };
 
-export { formatDate, getDateTime, getTodayDateTime };
+export { formatCurrency, formatDate, getDateTime, getTodayDateTime };

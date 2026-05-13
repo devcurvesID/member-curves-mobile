@@ -148,13 +148,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         data: { response },
       } = req_user_pengguna;
       const { source_id } = response;
+      await api.get(`/syncdata/member-status?user_id=${source_id}`);
+      await api.get(`/syncdata/member-payment?user_id=${source_id}`);
       await api.get(`/syncdata/weigh-measure?user_id=${source_id}`);
       await api.get(`/syncdata/workout?user_id=${source_id}`);
       await signInWithNumberPhone(body_req.phone);
       router.push("/(auth)");
     } catch (error: any) {
       console.log("error", error);
-
       console.log("error :", error.error);
       alert(error?.message);
     } finally {

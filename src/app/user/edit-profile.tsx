@@ -52,7 +52,6 @@ export default function EditProfileScreen() {
     isLoading,
     refetch,
   } = useLastWeighMeasure();
-  console.log("weighMeasure", weighMeasure);
 
   if (isLoading) {
     return (

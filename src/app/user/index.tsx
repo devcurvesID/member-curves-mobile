@@ -3,6 +3,7 @@ import Item from "@/components/ui/item";
 import Section from "@/components/ui/section";
 import { useAuth } from "@/context/auth";
 import { formatDate } from "@/helpers/dates";
+import { useMemberStatus } from "@/hooks/useMember";
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
 import React from "react";
@@ -12,6 +13,14 @@ export default function ProfileScreen() {
   const router = useRouter();
   const { user, isLoading, signOut } = useAuth();
   const user_personal = user.user_personal;
+  const {
+    data: memberStatus,
+    isLoading: isLoadingMemberStatus,
+    error,
+    refetch,
+  } = useMemberStatus();
+  console.log("memberStatus", memberStatus);
+
   return (
     <ContainerPage
       titleHeader="Detail Profil"
@@ -57,6 +66,37 @@ export default function ProfileScreen() {
             iconKey="joined"
           />
         </Section>
+        {!isLoadingMemberStatus && (
+          <>
+            {/* Member Status */}
+            <Section title="Status Member">
+              <Item
+                label="Status Member"
+                value={memberStatus.status}
+                iconKey={
+                  memberStatus.status == "Active"
+                    ? "person-active"
+                    : "person-non-active"
+                }
+              />
+              <Item
+                label="Tanggal Bergabung"
+                value={formatDate(memberStatus.from_date)}
+                iconKey="joined"
+              />
+              <Item
+                label="Tanggal Berakhir"
+                value={formatDate(memberStatus.thru_date)}
+                iconKey="leave-date"
+              />
+              <Item
+                label="Last WM"
+                value={formatDate(memberStatus.last_wm)}
+                iconKey="wm-date"
+              />
+            </Section>
+          </>
+        )}
 
         {/* PERSONAL */}
         <Section title="Personal Info">

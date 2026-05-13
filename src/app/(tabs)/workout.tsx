@@ -12,7 +12,9 @@ import {
   StyleSheet,
   View,
 } from "react-native";
+import QRCode from "react-native-qrcode-svg";
 import { SafeAreaView } from "react-native-safe-area-context";
+
 const { width, height } = Dimensions.get("window");
 
 function SectionTitle({ children }: { children: React.ReactNode }) {
@@ -31,6 +33,9 @@ const JadwalScreen = () => {
   const { colorScheme } = useColorScheme(); // "light" | "dark"
   console.log("colorScheme", colorScheme);
   const { user, isLoading } = useAuth();
+  console.log("user", user);
+
+  let base64Logo = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAA..";
 
   const colors = React.useMemo<[string, string]>(() => {
     if (colorScheme == "dark") {
@@ -74,14 +79,14 @@ const JadwalScreen = () => {
               weight="bold"
               className="text-[#FFFFFF] dark:text-[#FFFFFF] text-4xl font-extrabold tracking-tight"
             >
-              Hi, {user.name}
+              Member QR
             </Text>
             <Text
               variant="subtitle"
               weight="medium"
               className="text-[#FFFFFF] dark:text-[#FFFFFF] text-base mt-2"
             >
-              Ready to crush your workout? 💪
+              Scan untuk check-in workout 💪
             </Text>
           </View>
 
@@ -98,6 +103,35 @@ const JadwalScreen = () => {
           </Pressable>
         </View>
         {/* <Divider /> */}
+
+        <View className="pt-28">
+          {/* <SectionTitle>Your Weekly Progress</SectionTitle> */}
+
+          {/* QR CONTAINER */}
+          <View className="items-center justify-center">
+            <View className="bg-white p-5 rounded-[28px] shadow-2xl shadow-purple-500/40">
+              {/* QR CODE */}
+              <QRCode
+                // value={`${user._id}-${user.source_id}`}
+                value={user.user_personal.key_tag_id}
+                logo={require("@/assets/images/logo-curves.png")}
+                logoSize={40}
+                logoBackgroundColor="#F2F2F2"
+                color="#BB86FC"
+                size={300}
+              />
+            </View>
+
+            {/* MEMBER INFO */}
+            <View className="items-center mt-5">
+              <Text className="text-white text-lg font-bold">{user.name}</Text>
+
+              <Text className="text-white/70 text-sm mt-1">
+                MEMBER ID • {user.user_personal.key_tag_id}
+              </Text>
+            </View>
+          </View>
+        </View>
       </ScrollView>
     </SafeAreaView>
   );

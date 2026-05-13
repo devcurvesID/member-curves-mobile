@@ -20,7 +20,7 @@ export default function AttendanceScreen() {
     data: workoutHistory,
     isPending,
   } = useWorkoutHistory();
-  console.log("isPending", isPending);
+  console.log("isPending", workoutHistory);
 
   const user_personal = user.user_personal;
   const curr_workout_date = user_personal.joined;
@@ -71,9 +71,11 @@ export default function AttendanceScreen() {
   }, []);
 
   const onSelectPicker = async (data: any) => {
+    console.log("onSelectPicker", data);
+
     setSelectDateMonth(data);
 
-    await workoutHistoryFn({ year: data.year, month: data.month });
+    await workoutHistoryFn({ year: data.year, month: data.month - 1 });
     onOpenPicker();
   };
 
@@ -118,6 +120,7 @@ export default function AttendanceScreen() {
             ListFooterComponent={() =>
               isPending ? <ActivityIndicator /> : null
             }
+            showsVerticalScrollIndicator={false}
           />
         )}
         {/* <ScrollView
@@ -138,6 +141,15 @@ export default function AttendanceScreen() {
 }
 
 const DataWorkoutHistoryView = React.memo(({ data }: any) => {
+  // const { data: userClub, isLoading: isLoadingUserClub } = useUserClub();
+
+  const getClubName = (club_id: any) => {
+    // if (club_id) {
+    //   let club_name = userClub.find((e: any) => e._id === club_id);
+    //   return club_name.club_name;
+    // }
+    return "bandung";
+  };
   return (
     <View className="mt-4" key={data._id.toString()}>
       <Text className="text-gray-500 text-xs mb-2">
@@ -147,7 +159,9 @@ const DataWorkoutHistoryView = React.memo(({ data }: any) => {
       <View className="bg-white rounded-xl p-3">
         <View className="flex-row justify-between items-center py-2 border-b border-gray-100 last:border-0">
           <View>
-            <Text className="text-sm font-semibold text-gray-800">Bandung</Text>
+            <Text className="text-sm font-semibold text-gray-800">
+              {getClubName(data.club_id)}
+            </Text>
             <Text className="text-xs text-gray-400">
               {new Date(data.workout_date).toLocaleTimeString()}{" "}
             </Text>

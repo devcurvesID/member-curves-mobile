@@ -1,4 +1,8 @@
-import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
+import {
+  FontAwesome6,
+  Ionicons,
+  MaterialCommunityIcons,
+} from "@expo/vector-icons";
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 
@@ -25,6 +29,10 @@ const getIcon = (key: string) => {
           size={18}
           color="#10B981"
         />
+      );
+    case "leave-date":
+      return (
+        <MaterialCommunityIcons name="calendar-end" size={18} color="#F43F5E" />
       );
     case "sex":
       return (
@@ -121,6 +129,16 @@ const getIcon = (key: string) => {
         />
       );
 
+    case "person-active":
+      return (
+        <FontAwesome6 name="person-circle-check" size={18} color="#22C55E" />
+      );
+    case "person-non-active":
+      return (
+        <FontAwesome6 name="person-circle-xmark" size={18} color="#EC4899" />
+      );
+    case "wm-date":
+      return <FontAwesome6 name="calendar-days" size={18} color="#22C55E" />;
     default:
       return (
         <Ionicons name="information-circle-outline" size={18} color="#999" />

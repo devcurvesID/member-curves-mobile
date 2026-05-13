@@ -110,6 +110,7 @@ const DashboardScreen = () => {
               icon={<Ionicons name="calendar" size={22} color="#F8BBD0" />}
             />
             <MenuTile
+              onPress={() => router.push("/user/bills")}
               title="Tagihan"
               icon={<Ionicons name="bar-chart" size={22} color="#F8BBD0" />}
             />
