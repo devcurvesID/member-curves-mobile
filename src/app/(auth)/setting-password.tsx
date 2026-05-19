@@ -1,5 +1,11 @@
-import { PasswordInput, UsernameInput } from "@/components/ui/text-input";
+import {
+  NumberPhoneInput,
+  PasswordInput,
+  UsernameInput,
+} from "@/components/ui/text-input";
 import { useAuth } from "@/context/auth";
+import { validatePhoneNumber } from "@/helpers";
+import { router } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
 import {
   KeyboardAvoidingView,
@@ -11,12 +17,13 @@ import {
 } from "react-native";
 
 const SettingPasswordScreen = () => {
-  const { onCreateNewUser, userPhone } = useAuth();
-
+  const { onCreateNewUser, setUserPhone, userPhone } = useAuth();
+  const cek_phone_valid = validatePhoneNumber(userPhone.phone);
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const inputs = useRef<TextInput[]>([]);
   const [password, setPassword] = React.useState("");
   const [username, setUsername] = React.useState("");
+  const [phone, setPhone] = React.useState("");
 
   const [verifPassword, setVerifPassword] = React.useState("");
   useEffect(() => {
@@ -30,7 +37,6 @@ const SettingPasswordScreen = () => {
     let newOtp = [...otp];
     newOtp[index] = text;
     setOtp(newOtp);
-
     // pindah ke next
     if (text && index < 5) {
       inputs.current[index + 1]?.focus();
@@ -48,11 +54,22 @@ const SettingPasswordScreen = () => {
   const handleSubmit = async () => {
     const code = otp.join("");
     console.log("OTP:", code);
-    await onCreateNewUser({
-      username,
-      password,
-      verify_password: verifPassword,
-    });
+    if (!cek_phone_valid) {
+      setUserPhone({
+        ...userPhone,
+        username,
+        password,
+        new_phone: phone,
+        verify_password: verifPassword,
+      });
+      router.push("/(auth)/verification-otp");
+    } else {
+      await onCreateNewUser({
+        username,
+        password,
+        verify_password: verifPassword,
+      });
+    }
   };
 
   return (
@@ -69,14 +86,20 @@ const SettingPasswordScreen = () => {
       {/* FORM */}
       <View className="flex-1 bg-white rounded-t-[32px] mt-10 px-6 pt-8">
         {/* OTP INPUT */}
-
+        {!cek_phone_valid && (
+          <NumberPhoneInput
+            label="Inputkan nomor ponsel"
+            placeholder="81234567890"
+            value={phone}
+            onChangeText={setPhone}
+          />
+        )}
         <UsernameInput
           label="Buat Username"
           placeholder="inputkan username"
           value={username}
           onChangeText={setUsername}
         />
-
         <PasswordInput
           label="Password baru"
           placeholder="Inputkan password baru"

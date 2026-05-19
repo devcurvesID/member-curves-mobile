@@ -1,3 +1,4 @@
+import { validatePhoneNumber } from "@/helpers";
 import { api } from "@/lib/axios";
 import { tokenCache } from "@/utils/cache";
 import { router } from "expo-router";
@@ -6,6 +7,7 @@ import React from "react";
 interface AuthContextType {
   user: any;
   userPhone: any;
+  setUserPhone: (data: any) => void;
   isLoading: boolean;
   signInWithUsernamePassword: (
     username: string,
@@ -58,6 +60,16 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       const {
         data: { response },
       } = login_user;
+      if (!response.token) {
+        setUserPhone(response);
+        let cek_phone_valid = validatePhoneNumber(response.phone);
+        if (cek_phone_valid) {
+          router.push("/(auth)/verification-otp");
+          return;
+        }
+        router.push("/(auth)/setting-password");
+        return;
+      }
       setAccessToken(response.token);
       setRefreshToken(response.token);
       await tokenCache?.saveToken("accessToken", response.token);
@@ -126,7 +138,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
   const checkUserNumberPhoneSignIn = async () => {
     try {
-      console.log("userPhone", userPhone);
       if (userPhone._id) {
         await signInWithNumberPhone(userPhone.phone);
         return;
@@ -167,6 +178,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     <AuthContext.Provider
       value={{
         userPhone,
+        setUserPhone,
         user,
         isLoading,
         signInWithUsernamePassword,

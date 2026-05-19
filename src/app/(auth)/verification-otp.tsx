@@ -1,4 +1,5 @@
 import { useAuth } from "@/context/auth";
+import { validatePhoneNumber } from "@/helpers";
 import { useEffect, useRef, useState } from "react";
 import {
   KeyboardAvoidingView,
@@ -10,8 +11,13 @@ import {
 } from "react-native";
 
 const VerificationOTPScreen = () => {
-  const { checkNumberPhoneUser, checkUserNumberPhoneSignIn } = useAuth();
-
+  const {
+    userPhone,
+    onCreateNewUser,
+    checkNumberPhoneUser,
+    checkUserNumberPhoneSignIn,
+  } = useAuth();
+  const cek_phone_valid = validatePhoneNumber(userPhone.phone);
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const inputs = useRef<TextInput[]>([]);
 
@@ -43,7 +49,11 @@ const VerificationOTPScreen = () => {
   const handleSubmit = async () => {
     const code = otp.join("");
     console.log("OTP:", code);
-    await checkUserNumberPhoneSignIn();
+    if (!cek_phone_valid) {
+      await onCreateNewUser({ ...userPhone, phone: userPhone.new_phone });
+    } else {
+      await checkUserNumberPhoneSignIn();
+    }
   };
 
   return (
