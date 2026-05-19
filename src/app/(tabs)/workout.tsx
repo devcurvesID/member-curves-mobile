@@ -1,5 +1,7 @@
 import Text from "@/components/ui/text";
+import { DataWorkoutHistoryView } from "@/components/workout/list-workout";
 import { useAuth } from "@/context/auth";
+import { useLastWorkout } from "@/hooks/useWorkout";
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { useColorScheme } from "nativewind";
@@ -29,7 +31,14 @@ function SectionTitle({ children }: { children: React.ReactNode }) {
 function Divider() {
   return <View className="h-[1px] bg-white/10 my-5" />;
 }
-const JadwalScreen = () => {
+const WorkOutScreen = () => {
+  const {
+    data: lastWorkout,
+    error,
+    isLoading: isLoadingLastWorkout,
+    refetch,
+  } = useLastWorkout();
+
   const { colorScheme } = useColorScheme(); // "light" | "dark"
   console.log("colorScheme", colorScheme);
   const { user, isLoading } = useAuth();
@@ -132,9 +141,12 @@ const JadwalScreen = () => {
             </View>
           </View>
         </View>
+        {!isLoadingLastWorkout && lastWorkout && (
+          <DataWorkoutHistoryView data={lastWorkout} />
+        )}
       </ScrollView>
     </SafeAreaView>
   );
 };
 
-export default JadwalScreen;
+export default WorkOutScreen;

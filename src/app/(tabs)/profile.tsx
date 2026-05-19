@@ -20,7 +20,7 @@ export default function ProfileScreen() {
   const router = useRouter();
   const { user, isLoading, signOut } = useAuth();
   const user_personal = user.user_personal;
-
+  // path photo src="http://163.47.8.52/curves/images/member_photos/20260515151619.jpg"
   return (
     <Container>
       <ScrollView
@@ -58,11 +58,11 @@ export default function ProfileScreen() {
         </View>
 
         {/* Stats */}
-        <View className="flex-row gap-3 mt-8">
+        {/* <View className="flex-row gap-3 mt-8">
           <StatCard label="Workouts" value="124" />
           <StatCard label="Calories" value="32k" />
           <StatCard label="Hours" value="87h" />
-        </View>
+        </View> */}
 
         {/* Divider */}
         <View className="h-[1px] bg-white/10 my-8" />

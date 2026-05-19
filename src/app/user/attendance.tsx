@@ -3,8 +3,8 @@ import ContainerPage from "@/components/ui/container-page";
 import DateMonthPicker from "@/components/ui/date-month-picker";
 import { FlatListItem } from "@/components/ui/flat-list-item";
 import MenuItem from "@/components/ui/menu-item";
+import { DataWorkoutHistoryView } from "@/components/workout/list-workout";
 import { useAuth } from "@/context/auth";
-import { getDateTime } from "@/helpers/dates";
 import { useLastWorkout, useWorkoutHistory } from "@/hooks/useWorkout";
 import React from "react";
 import { ActivityIndicator, Text, View } from "react-native";
@@ -94,7 +94,7 @@ export default function AttendanceScreen() {
 
             <View className="flex-row justify-between mt-3">
               <View>
-                <Text className="text-gray-400 text-xs">Workout Bulan Ini</Text>
+                <Text className="text-gray-400 text-xs">{`Workout Bulan ${selectDateMonth.month_value} ${selectDateMonth.year}`}</Text>
                 <Text className="text-xl font-bold text-purple-600">
                   {workoutHistory.total_workout_per_month}
                 </Text>
@@ -139,39 +139,3 @@ export default function AttendanceScreen() {
     </>
   );
 }
-
-const DataWorkoutHistoryView = React.memo(({ data }: any) => {
-  // const { data: userClub, isLoading: isLoadingUserClub } = useUserClub();
-
-  const getClubName = (club_id: any) => {
-    // if (club_id) {
-    //   let club_name = userClub.find((e: any) => e._id === club_id);
-    //   return club_name.club_name;
-    // }
-    return "bandung";
-  };
-  return (
-    <View className="mt-4" key={data._id.toString()}>
-      <Text className="text-gray-500 text-xs mb-2">
-        {getDateTime(data.workout_date)}
-      </Text>
-
-      <View className="bg-white rounded-xl p-3">
-        <View className="flex-row justify-between items-center py-2 border-b border-gray-100 last:border-0">
-          <View>
-            <Text className="text-sm font-semibold text-gray-800">
-              {getClubName(data.club_id)}
-            </Text>
-            <Text className="text-xs text-gray-400">
-              {new Date(data.workout_date).toLocaleTimeString()}{" "}
-            </Text>
-          </View>
-
-          <View className="bg-purple-100 px-3 py-1 rounded-full">
-            <Text className="text-xs text-purple-600">Workout</Text>
-          </View>
-        </View>
-      </View>
-    </View>
-  );
-});

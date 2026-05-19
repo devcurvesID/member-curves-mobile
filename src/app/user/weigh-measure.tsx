@@ -72,7 +72,7 @@ export default function WeighMeasureScreen() {
   }, []);
   const onSelectPicker = async (data: any) => {
     setSelectDateMonth(data);
-    await weighMeasureHistoryFn({ year: data.year, month: data.month });
+    await weighMeasureHistoryFn({ year: data.year, month: data.month - 1 });
     onOpenPicker();
   };
 

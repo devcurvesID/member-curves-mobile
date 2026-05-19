@@ -5,7 +5,7 @@ import { useMemberPayment } from "@/hooks/usePayments";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React from "react";
-import { ActivityIndicator, Text, View } from "react-native";
+import { ActivityIndicator, Pressable, Text, View } from "react-native";
 
 export default function BillsScreen() {
   const router = useRouter();
@@ -81,6 +81,13 @@ export default function BillsScreen() {
 }
 
 const BillsView = ({ data }: any) => {
+  const router = useRouter();
+
+  const onDetail = () => {
+    console.log("SUBMIT:", data);
+    router.push("/user/detailbill");
+    // 🔥 call API di sini
+  };
   return (
     <View key={data._id} className="bg-white rounded-3xl mb-5 ">
       {/* TOP */}
@@ -113,7 +120,10 @@ const BillsView = ({ data }: any) => {
       </View>
 
       {/* AMOUNT */}
-      <View className="mt-5 bg-[#F8F5FF] rounded-2xl p-4">
+      <Pressable
+        onPress={onDetail}
+        className="mt-5 bg-[#F8F5FF] rounded-2xl p-4"
+      >
         <Text className="text-xs text-gray-400">Total Dibayar</Text>
 
         <Text className="text-2xl font-bold text-[#6F3FA0] mt-1">
@@ -137,7 +147,7 @@ const BillsView = ({ data }: any) => {
             </Text>
           </View>
         </View>
-      </View>
+      </Pressable>
 
       {/* FOOTER */}
       <View className="flex-row justify-between mt-5">
