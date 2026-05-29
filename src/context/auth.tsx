@@ -60,6 +60,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       const {
         data: { response },
       } = login_user;
+      console.log("response", response);
+
       if (!response.token) {
         setUserPhone(response);
         let cek_phone_valid = validatePhoneNumber(response.phone);

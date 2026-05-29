@@ -15,7 +15,6 @@ export default function BillsScreen() {
     //   error,
     //   refetch,
   } = useMemberPayment();
-  console.log("memberPayment", memberPayment);
 
   const onSubmit = (data: any) => {
     console.log("SUBMIT:", data);
@@ -85,7 +84,13 @@ const BillsView = ({ data }: any) => {
 
   const onDetail = () => {
     console.log("SUBMIT:", data);
-    router.push("/user/detailbill");
+    if (data.payment_number) {
+      router.push({
+        pathname: "/user/details-bill",
+        params: { data: JSON.stringify(data) }, //{ ...data, bank: { ...data.bank } },
+      });
+    }
+
     // 🔥 call API di sini
   };
   return (
@@ -118,7 +123,6 @@ const BillsView = ({ data }: any) => {
           </Text>
         </View>
       </View>
-
       {/* AMOUNT */}
       <Pressable
         onPress={onDetail}

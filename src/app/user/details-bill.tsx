@@ -1,49 +1,56 @@
 import ContainerPage from "@/components/ui/container-page";
-import { formatCurrency } from "@/helpers/dates";
-import { useMemberPayment } from "@/hooks/usePayments";
+import { useAuth } from "@/context/auth";
+import { formatCurrency, getDateTime } from "@/helpers/dates";
+import { useUserClub } from "@/hooks/useClubs";
+import { useMemberStatus } from "@/hooks/useMember";
+import { useLastWorkout } from "@/hooks/useWorkout";
 import {
   FontAwesome5,
   Ionicons,
   MaterialCommunityIcons,
 } from "@expo/vector-icons";
-import { useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import React from "react";
 import { ActivityIndicator, Image, ScrollView, Text, View } from "react-native";
 
-const payment = {
-  member_name: "ini hanya test",
-  membership_type: "PP12 - 2026",
-  payment_number: "00230906/PY/CIND/001/V/2026",
-  payment_date: "15-05-2026 14:02",
-  cashier: "DEV IT",
-
-  service_fee: 3000000,
-  monthly_fee: 7380000,
-  discount: 3000000,
-
-  total: 7380000,
-  paid_amount: 5000000,
-  remaining_bill: 2380000,
-
-  payment_method: "Tunai",
-  bank_name: "DEFAULT",
-};
 export default function DetailBillScreen() {
+  const { data: userClub, isLoading: isLoadingUserClub } = useUserClub();
+  const { data: lastWorkout, error, refetch } = useLastWorkout();
+  const { data: memberStatus, isLoading: isLoadingMemberStatus } =
+    useMemberStatus();
+  console.log("memberStatus", memberStatus);
+  console.log("userClub", userClub);
+
+  const { user, isLoading, signOut } = useAuth();
+
+  console.log("user", user);
+
   const router = useRouter();
-  const {
-    data: memberPayment,
-    isLoading: isLoadingMemberPayment,
-    //   error,
-    //   refetch,
-  } = useMemberPayment();
-  console.log("memberPayment", memberPayment);
+  const params = useLocalSearchParams();
+  const payment = JSON.parse(params.data as string);
+  console.log("payment", payment);
+
+  const total_amount = () => {
+    let layanan = payment.tax_amount + payment.amount_due;
+    let format = formatCurrency(layanan);
+    return format;
+  };
+
+  const sisa_utang = () => {
+    let amount = payment.amount_paid + payment.dc_amount;
+    let layanan = payment.tax_amount + payment.amount_due;
+    let jumlah = layanan - amount;
+
+    let format = formatCurrency(jumlah);
+    return format;
+  };
 
   const onSubmit = (data: any) => {
     console.log("SUBMIT:", data);
     // 🔥 call API di sini
   };
 
-  if (isLoadingMemberPayment) {
+  if (isLoadingUserClub || isLoadingMemberStatus) {
     return (
       <View className="flax-1 items-center">
         <ActivityIndicator size="small" />
@@ -74,7 +81,7 @@ export default function DetailBillScreen() {
             />
 
             <Text className="text-xl font-bold text-gray-800 mt-2">
-              Curves Surya Sumantri
+              {userClub[0].club_name}
             </Text>
           </View>
 
@@ -95,7 +102,7 @@ export default function DetailBillScreen() {
               </View>
 
               <Text className="font-semibold text-base text-gray-800">
-                {payment.membership_type}
+                {memberStatus.membership_type.membership_type_name}
               </Text>
             </View>
 
@@ -110,7 +117,7 @@ export default function DetailBillScreen() {
               </View>
 
               <Text className="font-semibold text-base text-gray-800 flex-1 text-right ml-4">
-                {payment.member_name}
+                {user.name}
               </Text>
             </View>
 
@@ -127,7 +134,7 @@ export default function DetailBillScreen() {
               </View>
 
               <Text className="font-semibold text-base text-gray-800 flex-1 text-right ml-4">
-                {payment.payment_number}
+                {payment.payment_number ? payment.payment_number : "-"}
               </Text>
             </View>
 
@@ -140,7 +147,7 @@ export default function DetailBillScreen() {
               </View>
 
               <Text className="font-semibold text-base text-gray-800">
-                {payment.payment_date}
+                {getDateTime(payment.payment_date)}
               </Text>
             </View>
 
@@ -157,7 +164,7 @@ export default function DetailBillScreen() {
               </View>
 
               <Text className="font-semibold text-base text-gray-800">
-                {payment.cashier}
+                {user.sales_person.name}
               </Text>
             </View>
           </View>
@@ -171,7 +178,7 @@ export default function DetailBillScreen() {
               <Text className="text-gray-500 text-base">Biaya Layanan</Text>
 
               <Text className="font-semibold text-base text-gray-800">
-                {formatCurrency(payment.service_fee)}
+                {formatCurrency(payment.amount_due)}
               </Text>
             </View>
 
@@ -179,7 +186,14 @@ export default function DetailBillScreen() {
               <Text className="text-gray-500 text-base">Biaya Bulanan</Text>
 
               <Text className="font-semibold text-base text-gray-800">
-                {formatCurrency(payment.monthly_fee)}
+                {formatCurrency(payment.amount_paid)}
+              </Text>
+            </View>
+            <View className="flex-row justify-between">
+              <Text className="text-gray-500 text-base">Pajak</Text>
+
+              <Text className="font-semibold text-base text-gray-800">
+                {formatCurrency(payment.tax_amount)}
               </Text>
             </View>
 
@@ -187,7 +201,7 @@ export default function DetailBillScreen() {
               <Text className="text-gray-500 text-base">Diskon</Text>
 
               <Text className="font-semibold text-base text-red-500">
-                - {formatCurrency(payment.discount)}
+                - {formatCurrency(payment.dc_amount)}
               </Text>
             </View>
           </View>
@@ -211,7 +225,7 @@ export default function DetailBillScreen() {
               </View>
 
               <Text className="text-2xl font-bold text-[#6F3FA0]">
-                {formatCurrency(payment.total)}
+                {total_amount()}
               </Text>
             </View>
 
@@ -222,12 +236,13 @@ export default function DetailBillScreen() {
                   <Ionicons name="wallet-outline" size={18} color="#6F3FA0" />
 
                   <Text className="ml-2 text-gray-700 font-medium">
-                    {payment.payment_method} {payment.bank_name}
+                    {payment.payment_method.payment_method}{" "}
+                    {payment.bank.bank_name}
                   </Text>
                 </View>
 
                 <Text className="font-bold text-[#6F3FA0]">
-                  {formatCurrency(payment.paid_amount)}
+                  {formatCurrency(payment.amount_paid)}
                 </Text>
               </View>
             </View>
@@ -237,7 +252,7 @@ export default function DetailBillScreen() {
               <Text className="text-base text-gray-500">Sisa Hutang</Text>
 
               <Text className="text-xl font-bold text-red-500">
-                {formatCurrency(payment.remaining_bill)}
+                {formatCurrency(payment.rest_of_bill)}
               </Text>
             </View>
           </View>

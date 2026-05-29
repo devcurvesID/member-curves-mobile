@@ -1,3 +1,6 @@
+import ContainerPage from "@/components/ui/container-page";
+import Item from "@/components/ui/item";
+import Section from "@/components/ui/section";
 import {
   NumberPhoneInput,
   PasswordInput,
@@ -5,16 +8,10 @@ import {
 } from "@/components/ui/text-input";
 import { useAuth } from "@/context/auth";
 import { validatePhoneNumber } from "@/helpers";
+import { formatDate } from "@/helpers/dates";
 import { router } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
-import {
-  KeyboardAvoidingView,
-  Platform,
-  Pressable,
-  Text,
-  TextInput,
-  View,
-} from "react-native";
+import { Pressable, ScrollView, Text, TextInput } from "react-native";
 
 const SettingPasswordScreen = () => {
   const { onCreateNewUser, setUserPhone, userPhone } = useAuth();
@@ -73,18 +70,47 @@ const SettingPasswordScreen = () => {
   };
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : undefined}
-      className="flex-1 bg-[#6F3FA0]"
+    <ContainerPage
+      titleHeader="Buat Password"
+      titleContent="Masukkan password baru"
     >
-      {/* HEADER */}
-      <View className="px-6 pt-20">
-        <Text className="text-white text-2xl font-bold">Buat Password</Text>
-        <Text className="text-purple-200 mt-2">Masukkan password baru</Text>
-      </View>
-
       {/* FORM */}
-      <View className="flex-1 bg-white rounded-t-[32px] mt-10 px-6 pt-8">
+      <ScrollView
+        contentContainerClassName="px-2 pt-5 pb-32"
+        showsVerticalScrollIndicator={false}
+      >
+        {/* ACCOUNT */}
+        <Section title="Informasi Member">
+          <Item label="Nama" value={userPhone.name} iconKey="name" />
+          <Item
+            label="Nama Club"
+            value={userPhone.club_name}
+            iconKey="joined"
+          />
+          {cek_phone_valid && (
+            <Item label="Phone" value={userPhone.phone} iconKey="phone" />
+          )}
+          <Item
+            label="Tanggal Daftar"
+            value={formatDate(userPhone.created_at)}
+            iconKey="joined"
+          />
+          <Item
+            label="Tanggal Bergabung"
+            value={formatDate(userPhone.joined)}
+            iconKey="joined"
+          />
+          <Item label="Alamat" value={userPhone.address} iconKey="address" />
+          <Item
+            label="Status Member"
+            value={userPhone.status}
+            iconKey={
+              userPhone.status == "Active"
+                ? "person-active"
+                : "person-non-active"
+            }
+          />
+        </Section>
         {/* OTP INPUT */}
         {!cek_phone_valid && (
           <NumberPhoneInput
@@ -123,8 +149,8 @@ const SettingPasswordScreen = () => {
         >
           <Text className="text-white font-semibold text-lg">Simpan</Text>
         </Pressable>
-      </View>
-    </KeyboardAvoidingView>
+      </ScrollView>
+    </ContainerPage>
   );
 };
 
