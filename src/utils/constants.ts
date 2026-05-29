@@ -20,3 +20,5 @@ export const COOKIE_OPTIONS = {
   maxAge: COOKIE_MAX_AGE,
 };
 export const REFRESH_COOKIE_NAME = "refresh_token";
+export const PATH_PUBLIC_IMAGE_MEMBER =
+  "http://163.47.8.52/curves/images/member_photos"; // process.env.PATH_PUBLIC_IMAGE_MEMBER;

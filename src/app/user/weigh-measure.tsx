@@ -45,12 +45,12 @@ export default function WeighMeasureScreen() {
   const joined_year = new Date(curr_workout_date).getFullYear();
 
   React.useEffect(() => {
-    async function getWorkout() {
+    async function getWeighMeasure() {
       let joined_year = new Date(weighMeasure.wm_date).getFullYear();
       let joined_month = new Date(weighMeasure.wm_date).getMonth();
       await weighMeasureHistoryFn({ year: joined_year, month: joined_month });
     }
-    getWorkout();
+    getWeighMeasure();
   }, [weighMeasure]);
 
   if (isLoading) {

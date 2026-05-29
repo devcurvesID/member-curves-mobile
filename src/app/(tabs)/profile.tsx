@@ -2,6 +2,7 @@ import Container from "@/components/ui/container";
 import MenuItem from "@/components/ui/menu-item";
 import Text from "@/components/ui/text";
 import { useAuth } from "@/context/auth";
+import { PATH_PUBLIC_IMAGE_MEMBER } from "@/utils/constants";
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
 import React from "react";
@@ -20,7 +21,6 @@ export default function ProfileScreen() {
   const router = useRouter();
   const { user, isLoading, signOut } = useAuth();
   const user_personal = user.user_personal;
-  // path photo src="http://163.47.8.52/curves/images/member_photos/20260515151619.jpg"
   return (
     <Container>
       <ScrollView
@@ -42,7 +42,7 @@ export default function ProfileScreen() {
             <Image
               source={{
                 uri: user_personal.photo
-                  ? user_personal.photo
+                  ? `${PATH_PUBLIC_IMAGE_MEMBER}/${user_personal.photo}`
                   : "https://i.pravatar.cc/300",
               }}
               style={{

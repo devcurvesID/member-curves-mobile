@@ -3,7 +3,6 @@ import { useAuth } from "@/context/auth";
 import { formatCurrency, getDateTime } from "@/helpers/dates";
 import { useUserClub } from "@/hooks/useClubs";
 import { useMemberStatus } from "@/hooks/useMember";
-import { useLastWorkout } from "@/hooks/useWorkout";
 import {
   FontAwesome5,
   Ionicons,
@@ -15,11 +14,8 @@ import { ActivityIndicator, Image, ScrollView, Text, View } from "react-native";
 
 export default function DetailBillScreen() {
   const { data: userClub, isLoading: isLoadingUserClub } = useUserClub();
-  const { data: lastWorkout, error, refetch } = useLastWorkout();
   const { data: memberStatus, isLoading: isLoadingMemberStatus } =
     useMemberStatus();
-  console.log("memberStatus", memberStatus);
-  console.log("userClub", userClub);
 
   const { user, isLoading, signOut } = useAuth();
 
@@ -86,88 +82,96 @@ export default function DetailBillScreen() {
           </View>
 
           {/* MEMBER INFO */}
-          <View className="mt-10 gap-6">
-            {/* Membership */}
-            <View className="flex-row justify-between items-start">
-              <View className="flex-row items-center">
-                <MaterialCommunityIcons
-                  name="card-account-details-outline"
-                  size={18}
-                  color="#9CA3AF"
-                />
+          {memberStatus && (
+            <View className="mt-10 gap-6">
+              {/* Membership */}
+              <View className="flex-row justify-between items-start">
+                <View className="flex-row items-center">
+                  <MaterialCommunityIcons
+                    name="card-account-details-outline"
+                    size={18}
+                    color="#9CA3AF"
+                  />
 
-                <Text className="text-gray-400 text-base ml-2">
-                  Tipe Keanggotaan
+                  <Text className="text-gray-400 text-base ml-2">
+                    Tipe Keanggotaan
+                  </Text>
+                </View>
+
+                <Text className="font-semibold text-base text-gray-800">
+                  {memberStatus.membership_type
+                    ? memberStatus.membership_type.membership_type_name
+                    : "-"}
                 </Text>
               </View>
 
-              <Text className="font-semibold text-base text-gray-800">
-                {memberStatus.membership_type.membership_type_name}
-              </Text>
-            </View>
+              {/* Member Name */}
+              <View className="flex-row justify-between items-start">
+                <View className="flex-row items-center">
+                  <Ionicons name="person-outline" size={18} color="#9CA3AF" />
 
-            {/* Member Name */}
-            <View className="flex-row justify-between items-start">
-              <View className="flex-row items-center">
-                <Ionicons name="person-outline" size={18} color="#9CA3AF" />
+                  <Text className="text-gray-400 text-base ml-2">
+                    Terima Dari
+                  </Text>
+                </View>
 
-                <Text className="text-gray-400 text-base ml-2">
-                  Terima Dari
+                <Text className="font-semibold text-base text-gray-800 flex-1 text-right ml-4">
+                  {user.name}
                 </Text>
               </View>
 
-              <Text className="font-semibold text-base text-gray-800 flex-1 text-right ml-4">
-                {user.name}
-              </Text>
-            </View>
+              {/* Invoice */}
+              {payment && (
+                <View className="flex-row justify-between items-start">
+                  <View className="flex-row items-center">
+                    <MaterialCommunityIcons
+                      name="file-document-outline"
+                      size={18}
+                      color="#9CA3AF"
+                    />
 
-            {/* Invoice */}
-            <View className="flex-row justify-between items-start">
-              <View className="flex-row items-center">
-                <MaterialCommunityIcons
-                  name="file-document-outline"
-                  size={18}
-                  color="#9CA3AF"
-                />
+                    <Text className="text-gray-400 text-base ml-2">
+                      No Invoice
+                    </Text>
+                  </View>
 
-                <Text className="text-gray-400 text-base ml-2">No Invoice</Text>
+                  <Text className="font-semibold text-base text-gray-800 flex-1 text-right ml-4">
+                    {payment.payment_number ? payment.payment_number : "-"}
+                  </Text>
+                </View>
+              )}
+
+              {/* Date */}
+              <View className="flex-row justify-between items-start">
+                <View className="flex-row items-center">
+                  <Ionicons name="calendar-outline" size={18} color="#9CA3AF" />
+
+                  <Text className="text-gray-400 text-base ml-2">Tanggal</Text>
+                </View>
+
+                <Text className="font-semibold text-base text-gray-800">
+                  {getDateTime(payment.payment_date)}
+                </Text>
               </View>
 
-              <Text className="font-semibold text-base text-gray-800 flex-1 text-right ml-4">
-                {payment.payment_number ? payment.payment_number : "-"}
-              </Text>
-            </View>
+              {/* Cashier */}
+              <View className="flex-row justify-between items-start">
+                <View className="flex-row items-center">
+                  <Ionicons
+                    name="person-circle-outline"
+                    size={18}
+                    color="#9CA3AF"
+                  />
 
-            {/* Date */}
-            <View className="flex-row justify-between items-start">
-              <View className="flex-row items-center">
-                <Ionicons name="calendar-outline" size={18} color="#9CA3AF" />
+                  <Text className="text-gray-400 text-base ml-2">Kasir</Text>
+                </View>
 
-                <Text className="text-gray-400 text-base ml-2">Tanggal</Text>
+                <Text className="font-semibold text-base text-gray-800">
+                  {user.sales_person.name}
+                </Text>
               </View>
-
-              <Text className="font-semibold text-base text-gray-800">
-                {getDateTime(payment.payment_date)}
-              </Text>
             </View>
-
-            {/* Cashier */}
-            <View className="flex-row justify-between items-start">
-              <View className="flex-row items-center">
-                <Ionicons
-                  name="person-circle-outline"
-                  size={18}
-                  color="#9CA3AF"
-                />
-
-                <Text className="text-gray-400 text-base ml-2">Kasir</Text>
-              </View>
-
-              <Text className="font-semibold text-base text-gray-800">
-                {user.sales_person.name}
-              </Text>
-            </View>
-          </View>
+          )}
 
           {/* DIVIDER */}
           <View className="border-t border-dashed border-gray-300 my-8" />
@@ -236,8 +240,10 @@ export default function DetailBillScreen() {
                   <Ionicons name="wallet-outline" size={18} color="#6F3FA0" />
 
                   <Text className="ml-2 text-gray-700 font-medium">
-                    {payment.payment_method.payment_method}{" "}
-                    {payment.bank.bank_name}
+                    {payment.payment_method
+                      ? payment.payment_method.payment_method
+                      : "-"}
+                    {payment.bank ? payment.bank.bank_name : "-"}
                   </Text>
                 </View>
 

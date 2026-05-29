@@ -4,6 +4,7 @@ import Section from "@/components/ui/section";
 import { useAuth } from "@/context/auth";
 import { formatDate } from "@/helpers/dates";
 import { useMemberStatus } from "@/hooks/useMember";
+import { PATH_PUBLIC_IMAGE_MEMBER } from "@/utils/constants";
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
 import React from "react";
@@ -19,7 +20,6 @@ export default function ProfileScreen() {
     error,
     refetch,
   } = useMemberStatus();
-  console.log("memberStatus", memberStatus);
 
   return (
     <ContainerPage
@@ -41,7 +41,7 @@ export default function ProfileScreen() {
             //   "https://i.pravatar.cc/300"
             source={{
               uri: user_personal.photo
-                ? user_personal.photo
+                ? `${PATH_PUBLIC_IMAGE_MEMBER}/${user_personal.photo}`
                 : "https://i.pravatar.cc/300",
             }}
             style={{
